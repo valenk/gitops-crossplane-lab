@@ -4,7 +4,7 @@
 apiVersion: platform.example.org/v1alpha1
 kind: StorageBucket
 metadata:
-  name: bucket-test-ns
+  name: my-bucket-2
   namespace: default
 spec:
   region: us-east-1
