@@ -12,7 +12,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:valenk/gitops-crossplane-lab.git
+    repoURL: https://github.com/valenk/gitops-crossplane-lab.git
     targetRevision: HEAD
     path: platform/packages
     directory:

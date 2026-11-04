@@ -24,7 +24,7 @@ spec:
       releaseName: argocd
       valueFiles:
       - $values/argocd/values.yaml
-  - repoURL: git@github.com:valenk/gitops-crossplane-lab.git
+  - repoURL: https://github.com/valenk/gitops-crossplane-lab.git
     targetRevision: HEAD
     ref: values
   destination:
