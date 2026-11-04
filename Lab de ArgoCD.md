@@ -928,6 +928,20 @@ kubectl get storagebuckets.platform.example.org -n default
 awsf s3 ls
 ```
 
+> [!warning] Um XR noutro namespace precisa de o namespace existir
+> A app `consumers` só cria o namespace de destino (`default`), e só com `CreateNamespace=true`. Se o `metadata.namespace` do XR for outro (por exemplo `test-ns`), o Argo falha com `namespaces "test-ns" not found` e fica a repetir. Põe o namespace no Git, ao lado do XR, com `sync-wave: "-1"` para ser criado primeiro:
+>
+> ```yaml
+> apiVersion: v1
+> kind: Namespace
+> metadata:
+>   name: test-ns
+>   annotations:
+>     argocd.argoproj.io/sync-wave: "-1"
+> ```
+>
+> Verificado no teu cluster: sem o namespace, a app ficou `OutOfSync` com esse erro. A variante com ApplicationSet resolve-o de outra forma (um namespace por pasta, com `CreateNamespace=true`).
+
 ## Apagar é tirar do Git
 
 ```bash
