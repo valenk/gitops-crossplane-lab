@@ -1,0 +1,27 @@
+# SOURCE: App of Apps pattern (https://argo-cd.readthedocs.io/en/stable/operator-manual/cluster-bootstrapping/)
+#   Sync waves: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/
+#   directory.recurse: https://argo-cd.readthedocs.io/en/stable/user-guide/directory/
+# ADAPTED: wave 4 (the StorageBucket CRD is created by the XRD, so this goes last); destination
+#   namespace is default, which is where consumers/default/my-bucket.yaml lives.
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: consumers
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:valenk/gitops-crossplane-lab.git
+    targetRevision: HEAD
+    path: consumers
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

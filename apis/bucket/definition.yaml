@@ -1,0 +1,29 @@
+# SOURCE: Crossplane, 'Get Started With Composition' (v2 XRD, scope Namespaced)
+#   https://docs.crossplane.io/latest/get-started/get-started-with-composition/
+# ADAPTED: a new API 'StorageBucket' (platform.example.org/v1alpha1) with one field, 'region'.
+#   Whoever asks for a bucket only writes the region; how the bucket is made is the platform's job.
+apiVersion: apiextensions.crossplane.io/v2
+kind: CompositeResourceDefinition
+metadata:
+  name: storagebuckets.platform.example.org
+spec:
+  scope: Namespaced
+  group: platform.example.org
+  names:
+    kind: StorageBucket
+    plural: storagebuckets
+  versions:
+  - name: v1alpha1
+    served: true
+    referenceable: true
+    schema:
+      openAPIV3Schema:
+        type: object
+        properties:
+          spec:
+            type: object
+            properties:
+              region:
+                description: AWS region of the bucket.
+                type: string
+                default: us-east-1

@@ -1,0 +1,10 @@
+# SOURCE: this lab's own example: a 'StorageBucket' XR that satisfies the XRD in apis/bucket/definition.yaml.
+#   XR format: https://docs.crossplane.io/latest/composition/composite-resources/
+# WHAT HAPPENS: Crossplane picks the only compatible Composition and creates an S3 Bucket in floci.
+apiVersion: platform.example.org/v1alpha1
+kind: StorageBucket
+metadata:
+  name: my-bucket
+  namespace: default
+spec:
+  region: us-east-1

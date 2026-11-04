@@ -1,0 +1,51 @@
+# SOURCE: Crossplane, 'Get Started With Composition' (KCL variant, inline KCL source)
+#   https://docs.crossplane.io/latest/get-started/get-started-with-composition/
+#   Same structure as https://docs.crossplane.io/latest/manifests/get-started/composition/composition-kcl.yaml
+#   Compositions: https://docs.crossplane.io/latest/composition/compositions/
+# ADAPTED: the official example builds a Deployment and a Service; here the KCL builds one S3 Bucket
+#   (s3.aws.m.upbound.io, from the 'Lab de duas compositions'). The XR name becomes the bucket name in
+#   floci (crossplane.io/external-name), and the XR's 'region' becomes the Bucket's region.
+# HOW IT READS: `option("params").oxr` is the XR the user created. `items` is the list of resources
+#   Crossplane must create. The 'krm.kcl.dev/composition-resource-name' annotation is the stable name of
+#   each composed resource. No metadata.namespace is set: the Bucket inherits the XR's namespace.
+#   The second step (function-auto-ready) marks the XR Ready when the Bucket is.
+apiVersion: apiextensions.crossplane.io/v1
+kind: Composition
+metadata:
+  name: storagebucket-aws
+spec:
+  compositeTypeRef:
+    apiVersion: platform.example.org/v1alpha1
+    kind: StorageBucket
+  mode: Pipeline
+  pipeline:
+  - step: kcl
+    functionRef:
+      name: function-kcl
+    input:
+      apiVersion: krm.kcl.dev/v1alpha1
+      kind: KCLInput
+      spec:
+        source: |
+          oxr = option("params").oxr
+
+          _bucket = {
+            apiVersion = "s3.aws.m.upbound.io/v1beta1"
+            kind = "Bucket"
+            metadata.annotations = {
+              "krm.kcl.dev/composition-resource-name" = "bucket"
+              "crossplane.io/external-name" = oxr.metadata.name
+            }
+            spec = {
+              providerConfigRef = {kind = "ClusterProviderConfig", name = "default"}
+              forProvider = {
+                region = oxr.spec.region
+                tags = {"managed-by" = "argocd"}
+              }
+            }
+          }
+
+          items = [_bucket]
+  - step: auto-ready
+    functionRef:
+      name: function-auto-ready

@@ -1,0 +1,11 @@
+# SOURCE: Crossplane, 'Providers' (installing a provider package)
+#   https://docs.crossplane.io/latest/packages/providers/
+# ADAPTED: package xpkg.upbound.io/upbound/provider-aws-s3:v2.9.3, the same one used in the
+#   'Lab de duas compositions'. It installs the S3 Bucket managed resources; the
+#   provider-family-aws package comes in automatically as a dependency.
+apiVersion: pkg.crossplane.io/v1
+kind: Provider
+metadata:
+  name: provider-aws-s3
+spec:
+  package: xpkg.upbound.io/upbound/provider-aws-s3:v2.9.3

@@ -1,0 +1,11 @@
+# SOURCE: Crossplane, 'Get Started With Composition' (installing function-kcl)
+#   https://docs.crossplane.io/latest/get-started/get-started-with-composition/
+#   Same manifest as https://docs.crossplane.io/latest/manifests/get-started/composition/fn-kcl.yaml
+# ADAPTED: simpler object name (function-kcl). Version v0.11.2 is the one the Crossplane docs use.
+# WHY: runs the KCL code written inside the Composition (apis/bucket/composition.yaml).
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-kcl
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/function-kcl:v0.11.2

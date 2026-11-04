@@ -1,0 +1,28 @@
+# SOURCE: official Crossplane Helm chart (repo https://charts.crossplane.io/stable, version 2.4.3)
+#   Crossplane + Argo CD guide: https://docs.crossplane.io/latest/guides/crossplane-with-argo-cd/
+#   Sync waves: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-waves/
+# ADAPTED: wave 1; CreateNamespace=true; ServerSideApply=true kept because the lab was tested that way.
+#   (The chart ships no CRDs: Crossplane's init container creates them when it starts.)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: crossplane
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: https://charts.crossplane.io/stable
+    chart: crossplane
+    targetRevision: 2.4.3
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: crossplane-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ServerSideApply=true

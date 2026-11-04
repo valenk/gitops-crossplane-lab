@@ -1,0 +1,24 @@
+# SOURCE: Argo CD Helm chart 'argo-cd' (argo-helm), values reference:
+#   https://github.com/argoproj/argo-helm/tree/main/charts/argo-cd
+#   Health check (the Lua script is the one from the Argo CD docs):
+#   https://argo-cd.readthedocs.io/en/stable/operator-manual/health/#argocd-app
+# ADAPTED: the chart defaults are kept; the only setting changed is the health check below.
+# WHY: Argo CD 3.x has no built-in health check for Application; without it the sync waves
+#   of the 'root' app do not wait for each other.
+# USED TWICE: `helm upgrade --install ... -f argocd/values.yaml` in the bootstrap, and then the
+#   'argocd' Application reads this same file from Git (apps/argocd.yaml, 'ref: values').
+configs:
+  cm:
+    resource.customizations.health.argoproj.io_Application: |
+      hs = {}
+      hs.status = "Progressing"
+      hs.message = ""
+      if obj.status ~= nil then
+        if obj.status.health ~= nil then
+          hs.status = obj.status.health.status
+          if obj.status.health.message ~= nil then
+            hs.message = obj.status.health.message
+          end
+        end
+      end
+      return hs

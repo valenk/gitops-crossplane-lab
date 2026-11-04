@@ -1,0 +1,27 @@
+# SOURCE: this user's own 'Lab de duas compositions' (tested against floci), file
+#   '01-providerconfig.yaml'; the fields are defined by the provider's CRD (validated below).
+# ADAPTED: endpoint points at floci (the local AWS) running on your PC, seen from inside the
+#   cluster as 169.254.1.2.nip.io. The Secret 'aws-secret' is NOT in Git: you create it by hand
+#   during the bootstrap (it only holds the dummy keys 'test'/'test').
+# NEVER use real AWS credentials here: a wrong endpoint would send requests to real AWS.
+apiVersion: aws.m.upbound.io/v1beta1
+kind: ClusterProviderConfig
+metadata:
+  name: default
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: aws-secret
+      key: creds
+  endpoint:
+    hostnameImmutable: true
+    services: [s3, s3control, sts]
+    url:
+      type: Static
+      static: http://169.254.1.2.nip.io:4566
+  skip_credentials_validation: true
+  skip_metadata_api_check: true
+  skip_requesting_account_id: true
+  s3_use_path_style: true

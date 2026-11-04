@@ -1,0 +1,10 @@
+# SOURCE: Crossplane, 'Get Started With Composition' (function-auto-ready)
+#   https://docs.crossplane.io/latest/get-started/get-started-with-composition/
+# ADAPTED: version v0.7.1, the same one used in the 'Lab de duas compositions'.
+# WHY: marks the XR as Ready once all its composed resources are ready.
+apiVersion: pkg.crossplane.io/v1
+kind: Function
+metadata:
+  name: function-auto-ready
+spec:
+  package: xpkg.crossplane.io/crossplane-contrib/function-auto-ready:v0.7.1
