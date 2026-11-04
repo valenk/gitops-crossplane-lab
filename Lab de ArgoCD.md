@@ -953,6 +953,9 @@ kubectl get storagebuckets.platform.example.org my-bucket -n default -o jsonpath
 
 Repete o `get` passados uns segundos e o valor volta a `us-east-1`, o do Git. É o `selfHeal`. A mudança de região num bucket já criado pode dar erro no Crossplane até ser revertida.
 
+> [!note] Criar um recurso à mão, fora do Git, não é desfeito
+> O `prune` e o `selfHeal` só atuam nos recursos que o Argo gere, ou seja, os que vêm do Git e levam a annotation `argocd.argoproj.io/tracking-id`. Se aplicares um `StorageBucket` à mão com `kubectl apply`, o Argo não o apaga (nunca esteve no Git). Verificado: um XR criado à mão ficou no cluster, o Crossplane criou o bucket no floci, e a app `consumers` continuou `Synced` com um só recurso, o do Git. Para o Argo o gerir, põe o ficheiro no Git. Apaga o que criaste à mão com `kubectl delete`.
+
 ## O Crossplane repõe o que apagas no floci
 
 Isto é o Crossplane, não o Argo:

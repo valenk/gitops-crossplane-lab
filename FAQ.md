@@ -137,6 +137,9 @@ Uma à mão, no `helm upgrade --install ... -f argocd/values.yaml`, para o Argo 
 ## Para que serve o health check de `Application`?
 É uma chave do `argocd-cm`, posta em `configs.cm` do `values.yaml`. O Argo 3.5.6 não avalia a saúde das `Application`s de origem. Sem este check (copiado da doc), as sync waves do `root` não esperavam umas pelas outras.
 
+## Criei um recurso à mão com `kubectl apply` e o Argo não o apagou. Porquê?
+Porque o Argo só gere o que vem do Git. Cada recurso que aplica leva a annotation `argocd.argoproj.io/tracking-id`. O `prune` só apaga recursos rastreados que saíram do Git, e o `selfHeal` só desfaz mudanças nesses recursos. Um recurso criado à mão não tem a annotation, por isso o Argo ignora-o (vimos isto com um segundo `StorageBucket`). O bucket no floci foi criado na mesma, porque quem o cria é o Crossplane, que não sabe nada do Argo. Para o Argo o gerir, põe o ficheiro no Git. Para o limpar, `kubectl delete`.
+
 ## Porque é que a Secret do floci não vai para o Git?
 Segue a regra de nunca pôr secrets no Git. As chaves são `test`/`test` (o floci aceita qualquer uma), mas o hábito fica. Crias a Secret à mão no bootstrap.
 
